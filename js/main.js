@@ -1,11 +1,20 @@
 (function () {
+    // ===  PARAMETERS ===
+    var topThreshold = 100; // value in pixel
+    var throttleInterval = 500;
+
+    // ===  INIT  ====
     var scrollEventCounter = 0;
     var scrollHandlerCallCounter = 0;
 
     var domStuff = {};
+    var yOffsetPrevious = 0;
+
+
+    var shouldShowHeader = true;
+
 
     $(document).ready(function() {
-	var throttleInterval = 500;
 	var throttledScrollEventHandler = _.throttle(onScrollHandler, 
 						     throttleInterval,
 						     {trailing: true});
@@ -17,16 +26,46 @@
 	
 	domStuff.scrollEventCounter = $('#scroll-event-counter');
 	domStuff.scrollHandlerCallCounter = $('#scroll-handler-call-counter');
+	domStuff.headerState = $('#header-state');
 
 	$('#reset-button').click(resetCounter);
     });
 
 
-    function onScrollHandler(scrollEvent) {
-	console.log('onScrollHandler !');
-	console.log(scrollEvent);
+    // ====================
+    // ===  MAIN LOGIC  ===
+    // ====================
 
+    function onScrollHandler(scrollEvent) {
+	var yOffset = window.pageYOffset;
+	
+	if (isOnPageTop(yOffset) || (yOffset < yOffsetPrevious)) {
+	    showHeader();
+	} else {
+	    hideHeader();
+	}
+
+	yOffsetPrevious = yOffset;
 	incrementScrollHandlerCallCounter();
+    }
+
+    function isOnPageTop(yOffset) {
+	return yOffset <= topThreshold;
+    }
+
+
+    // ==========================
+    // ===  DOM MANIPULATION  ===
+    // ==========================
+
+    function showHeader() {
+	console.log('SHOW header');
+	domStuff.headerState.html('SHOW');
+    }
+
+    function hideHeader() {
+	console.log('HIDE header');
+	domStuff.headerState.html('HIDE');
     }
 
     function incrementScrollEventCounter() {
