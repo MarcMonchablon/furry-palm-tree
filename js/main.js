@@ -15,9 +15,12 @@
 
 
     $(document).ready(function() {
-	var throttledScrollEventHandler = _.throttle(onScrollHandler, 
+/*	var throttledScrollEventHandler = _.throttle(onScrollHandler, 
 						     throttleInterval,
-						     {leading: true});
+						     {leading: true});  */
+
+	var throttledScrollEventHandler = throttle(onScrollHandler, 
+						   throttleInterval);
 
 	$(document).on('scroll', function(scrollEvent) {
 	    incrementScrollEventCounter();
@@ -88,4 +91,65 @@
 	domStuff.scrollEventCounter.html(scrollEventCounter);
 	domStuff.scrollHandlerCallCounter.html(scrollHandlerCallCounter);
     }
+
+
+    // ==========================
+    // ===  Throttle          ===
+    // ==========================
+
+    /** take a function, an interval (in milliseconds)
+        return a function 
+
+     * TODO: Add the possibility to add a delay before first call
+     * TODO: Add a 'flush' and a 'cancel' method.
+     */
+    function throttle(fn, interval) {
+	// TODO : corriger les bugs !
+	var timeoutId;
+
+	var resultFn = function() {
+	    if (timeoutId) return;
+
+	    fn.apply(null, arguments);    
+	    timeoutId = window.setTimeout(function() {
+		timeoutId = undefined;
+	    }, interval);
+	};
+
+	resultFn.prototype = {
+	    cancel: function() {
+		if (timeoutId) {
+		    window.clearTimeout(timeoutId);
+		}
+	    }
+	};
+
+	return resultFn;
+    } 
+
+
+    /* 
+     
+     var tfoo = throttle(foo, 300);
+
+     tfoo();  // do stuff
+     tfoo()  // nothing
+     // ... time pass
+     // tfoo finally execute
+
+     tfoo()  // do stuff
+     tfoo()  // nothing
+     tfoo.flush() // execute function, and stop/reset counter.
+
+     tfoo() // do stuff
+     tfoo() // nothing
+     tfoo.cancel()
+     // tfoo won't execute ever.
+     
+
+     
+     
+
+     */
+
 })();
