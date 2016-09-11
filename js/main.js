@@ -17,7 +17,7 @@
     $(document).ready(function() {
 	var throttledScrollEventHandler = _.throttle(onScrollHandler, 
 						     throttleInterval,
-						     {trailing: true});
+						     {leading: true});
 
 	$(document).on('scroll', function(scrollEvent) {
 	    incrementScrollEventCounter();
@@ -27,6 +27,7 @@
 	domStuff.scrollEventCounter = $('#scroll-event-counter');
 	domStuff.scrollHandlerCallCounter = $('#scroll-handler-call-counter');
 	domStuff.headerState = $('#header-state');
+	domStuff.header = $('#main-header');
 
 	$('#reset-button').click(resetCounter);
     });
@@ -61,11 +62,15 @@
     function showHeader() {
 	console.log('SHOW header');
 	domStuff.headerState.html('SHOW');
+	domStuff.header.removeClass('hide');
+	domStuff.header.addClass('show');
     }
 
     function hideHeader() {
 	console.log('HIDE header');
 	domStuff.headerState.html('HIDE');
+	domStuff.header.removeClass('show');
+	domStuff.header.addClass('hide');
     }
 
     function incrementScrollEventCounter() {

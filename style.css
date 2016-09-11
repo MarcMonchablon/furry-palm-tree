@@ -1,11 +1,28 @@
 body {
     background: pink;
+    padding-top: 80px;
 }
 
 header {
-    background: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+
+    display: block;
+    width: 100%;
+
+    background: #bf9d93;
     padding: 1em;
     text-align: center;
+
+    transition: transform 0.5s ease;
+}
+
+#main-header.show {
+    transform: translateY(0);
+}
+
+#main-header.hide {
+    transform: translateY(-95%);
 }
 
 header h1 {
